@@ -4,11 +4,8 @@ const { default: mongoose } = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
-// const multer = require('multer');
 
-// const router = express.Router();
-// const path = require('path');
-// const ProfilePicture = require('./models/ProfilePicture');
+
 const User = require('./models/User');
 const Personal = require('./models/Personal');
 const Objective = require('./models/Objective');
@@ -37,17 +34,23 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: 'http://localhost:5000', // Make sure this matches your frontend URL
+    //frontend url
+    origin: 'http://localhost:5000', 
   })
 );
 
 app.use(cookieParser());
-const jwtSecret = 'E3P5S8X4G2B7F1Y9D6I0C3R6K9T2Z1A7L';
+//crete jwt secret key 
+const jwtSecret = 'E3P5S8X4G2B7F1Y9D6I0C3R6K9T2Z1A7L';r
+//genearting salt using gensaltsync method of 10 rounds of processing ,algo will go through 2^10  1024 ronds of processing of hashing  
 const bcryptSalt = bcrypt.genSaltSync(10);
+
 app.get('/api/test', (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+
   res.json('Test Ok');
 });
+
+//apis for create and login
 app.post('/api/register', async (req, res) => {
   const { username, email, password } = req.body;
   try {
@@ -62,6 +65,8 @@ app.post('/api/register', async (req, res) => {
     res.status(422).json('Failed to create User');
   }
 });
+
+//to retreive data from token we used this method in evry api
 const getUserDataFromToken = req => {
   return new Promise((resolve, reject) => {
     jwt.verify(req.cookies.token, jwtSecret, {}, (e, userData) => {
@@ -70,6 +75,7 @@ const getUserDataFromToken = req => {
     });
   });
 };
+
 app.post('/api/login', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { username, password } = req.body;
@@ -86,6 +92,7 @@ app.post('/api/login', async (req, res) => {
         {},
         (e, token) => {
           if (e) throw e;
+          //here cookie response will send to user computer and it will be stored there whic will contain token and userdata
           res.cookie('token', token).json(userData);
         },
       );
@@ -154,6 +161,7 @@ app.post('/api/objective', async (req, res) => {
     res.status(500).json('ailed to post details');
   }
 });
+
 app.post('/api/experience', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromToken(req);
