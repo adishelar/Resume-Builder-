@@ -41,7 +41,7 @@ app.use(
 
 app.use(cookieParser());
 //crete jwt secret key 
-const jwtSecret = 'E3P5S8X4G2B7F1Y9D6I0C3R6K9T2Z1A7L';r
+const jwtSecret = 'E3P5S8X4G2B7F1Y9D6I0C3R6K9T2Z1A7L';
 //genearting salt using gensaltsync method of 10 rounds of processing ,algo will go through 2^10  1024 ronds of processing of hashing  
 const bcryptSalt = bcrypt.genSaltSync(10);
 
